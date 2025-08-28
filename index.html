@@ -24,6 +24,21 @@
 </form>
 
 <div id="memberList"></div>
-  
+  <script>
+  const form = document.getElementById("addMemberForm");
+  const list = document.getElementById("memberList");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("memberName").value;
+    const role = document.getElementById("memberRole").value;
+    const emoji = document.getElementById("memberEmoji").value;
+
+    const memberCard = `<p>${emoji} <strong>${name}</strong> — ${role}</p>`;
+    list.innerHTML += memberCard;
+
+    form.reset();
+  });
+  </script>
 </body>
 </html>
