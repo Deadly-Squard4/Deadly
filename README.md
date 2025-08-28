@@ -11,7 +11,7 @@ Welcome to the official GitHub Pages site of **DeadlySquard4** — a tactical ga
 - `index.html` — Homepage with squad intro and logo
 - `Squard.html` — Member list with emoji and roles
 - `style.css` — Custom styling for dark theme and squad vibe
-- `images/logo.png` — Official squad logo
+- `images/logo.jpeg` — Official squad logo
 
 ## 🚀 Upcoming Modules
 - Match Schedule Tracker
@@ -20,7 +20,7 @@ Welcome to the official GitHub Pages site of **DeadlySquard4** — a tactical ga
 - Squad Stats Dashboard
 
 ## 📸 Logo Preview
-![Deadly Squad Logo](images/logo.png)
+![Deadly Squad Logo](images/logo.jpeg)
 
 ---
 
