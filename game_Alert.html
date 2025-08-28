@@ -1,1 +1,9 @@
+<div id="alertBox"></div>
 
+<script>
+  fetch("https://raw.githubusercontent.com/deadlysquadadmin/ds-website/main/alerts.txt")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("alertBox").innerText = data;
+    });
+</script>
