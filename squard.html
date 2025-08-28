@@ -15,80 +15,7 @@
   </ul>
   <a href="index.html">← Back to Home</a>
     <h2>🧑‍🤝‍🧑 Add New Squad Member</h2>
-<form id="addMemberForm">
-  <input type="text" id="memberName" placeholder="Member Name" required><br><br>
-  <input type="text" id="memberRole" placeholder="Role (IGL, Scout, etc)" required><br><br>
-  <input type="text" id="memberEmoji" placeholder="Emoji (🔥, 💀, 🦁)" required><br><br>
-  <button type="submit">Add Member</button>
-</form>
-
-<div id="memberList"></div>
-  <script>
-  const form = document.getElementById("addMemberForm");
-  const list = document.getElementById("memberList");
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const name = document.getElementById("memberName").value;
-    const role = document.getElementById("memberRole").value;
-    const emoji = document.getElementById("memberEmoji").value;
-
-    const memberCard = `<p>${emoji} <strong>${name}</strong> — ${role}</p>`;
-    list.innerHTML += memberCard;
-
-    form.reset();
-  });
-  </script>
-  <h2>🧑‍🤝‍🧑 Add New Squad Member</h2>
-<form id="addMemberForm">
-  <input type="text" id="memberName" placeholder="Member Name" required><br><br>
-  <input type="text" id="memberRole" placeholder="Role (IGL, Scout, etc)" required><br><br>
-  <input type="text" id="memberEmoji" placeholder="Emoji (🔥, 💀, 🦁)" required><br><br>
-  <button type="submit">Add Member</button>
-</form>
-
-<h3>🔰 Squad Members</h3>
-<div id="memberList"></div>
-  <script>
-  const form = document.getElementById("addMemberForm");
-  const list = document.getElementById("memberList");
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const name = document.getElementById("memberName").value;
-    const role = document.getElementById("memberRole").value;
-    const emoji = document.getElementById("memberEmoji").value;
-
-    const memberCard = `<p>${emoji} <strong>${name}</strong> — ${role}</p>`;
-    list.innerHTML += memberCard;
-
-    form.reset();
-  });
-  </script>
-  <!DOCTYPE html>
-<html>
-<head>
-  <title>Deadly Squad Members</title>
-  <style>
-    body {
-      background-color: #111;
-      color: #ffcc00;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    .member-card {
-      background-color: #222;
-      border: 1px solid #ffcc00;
-      padding: 10px;
-      margin: 10px auto;
-      border-radius: 8px;
-      width: 80%;
-      font-size: 18px;
-    }
-  </style>
-</head>
-<body>
+<fo
 
   <h1>🧑‍🤝‍🧑 Deadly Squad Members</h1>
   <div id="member-list">Loading members...</div>
@@ -118,8 +45,5 @@
 
     loadMembers();
   </script>
-
-</body>
-</html>
 </body>
 </html>
