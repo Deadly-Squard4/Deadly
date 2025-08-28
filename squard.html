@@ -65,5 +65,61 @@
     form.reset();
   });
   </script>
+  <!DOCTYPE html>
+<html>
+<head>
+  <title>Deadly Squad Members</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #ffcc00;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .member-card {
+      background-color: #222;
+      border: 1px solid #ffcc00;
+      padding: 10px;
+      margin: 10px auto;
+      border-radius: 8px;
+      width: 80%;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧑‍🤝‍🧑 Deadly Squad Members</h1>
+  <div id="member-list">Loading members...</div>
+
+  <script>
+    async function loadMembers() {
+      const sheetURL = "PASTE_YOUR_CSV_LINK_HERE"; // 👈 Replace this with your actual published CSV link
+      const response = await fetch(sheetURL);
+      const data = await response.text();
+      const rows = data.split("\n").slice(1); // Skip header
+
+      let html = "";
+      rows.forEach(row => {
+        const [name, role, emoji, status, date] = row.split(",");
+        html += `
+          <div class="member-card">
+            ${emoji?.trim()} <strong>${name?.trim()}</strong><br>
+            Role: ${role?.trim()}<br>
+            Status: ${status?.trim()}<br>
+            Joined: 🗓️ ${date?.trim()}
+          </div>
+        `;
+      });
+
+      document.getElementById("member-list").innerHTML = html;
+    }
+
+    loadMembers();
+  </script>
+
+</body>
+</html>
 </body>
 </html>
