@@ -95,7 +95,7 @@
 
   <script>
     async function loadMembers() {
-      const sheetURL = "PASTE_YOUR_CSV_LINK_HERE"; // 👈 Replace this with your actual published CSV link
+      const sheetURL = "https://docs.google.com/spreadsheets/d/1SvLWAJ3S64H0NpnGq90Ve6nWBcSdtMOBuGnEV9-T9w8/edit?usp=drivesdk; // 👈 Replace this with your actual published CSV link
       const response = await fetch(sheetURL);
       const data = await response.text();
       const rows = data.split("\n").slice(1); // Skip header
