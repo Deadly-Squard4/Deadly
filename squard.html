@@ -28,17 +28,19 @@
       border-radius: 8px;
     }
     button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background: #4CAF50;
-      color: white;
+      padding: 8px 12px;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
     }
-    button:hover {
+    .add-btn {
+      width: 100%;
+      background: #4CAF50;
+      color: white;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .add-btn:hover {
       background: #45a049;
     }
     ul {
@@ -51,9 +53,20 @@
       padding: 10px;
       margin: 6px 0;
       border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     span {
       font-weight: bold;
+    }
+    .delete-btn {
+      background: #e53935;
+      color: white;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      background: #c62828;
     }
   </style>
 </head>
@@ -63,21 +76,31 @@
     <input type="text" id="name" placeholder="Enter Name">
     <input type="text" id="role" placeholder="Enter Role">
     <input type="text" id="emoji" placeholder="Enter Emoji (🙂🔥⚡)">
-    <button onclick="addMember()">Add Member</button>
+    <button class="add-btn" onclick="addMember()">Add Member</button>
 
     <ul id="memberList"></ul>
   </div>
 
   <script>
+    // Load saved members from localStorage on page load
+    window.onload = function() {
+      let savedMembers = JSON.parse(localStorage.getItem("members")) || [];
+      savedMembers.forEach((m, index) => {
+        addMemberToList(m.name, m.role, m.emoji, false, index);
+      });
+    }
+
     function addMember() {
       let name = document.getElementById("name").value;
       let role = document.getElementById("role").value;
       let emoji = document.getElementById("emoji").value;
 
       if(name && role && emoji) {
-        let li = document.createElement("li");
-        li.innerHTML = `${emoji} <span>${name}</span> - ${role}`;
-        document.getElementById("memberList").appendChild(li);
+        let members = JSON.parse(localStorage.getItem("members")) || [];
+        members.push({name, role, emoji});
+        localStorage.setItem("members", JSON.stringify(members));
+
+        addMemberToList(name, role, emoji, false, members.length - 1);
 
         // clear input fields
         document.getElementById("name").value = "";
@@ -86,6 +109,30 @@
       } else {
         alert("Please fill all fields!");
       }
+    }
+
+    function addMemberToList(name, role, emoji, save, index) {
+      let li = document.createElement("li");
+      li.innerHTML = `${emoji} <span>${name}</span> - ${role}`;
+      
+      // delete button
+      let delBtn = document.createElement("button");
+      delBtn.innerText = "Delete";
+      delBtn.className = "delete-btn";
+      delBtn.onclick = function() {
+        deleteMember(index, li);
+      };
+
+      li.appendChild(delBtn);
+      document.getElementById("memberList").appendChild(li);
+    }
+
+    function deleteMember(index, element) {
+      let members = JSON.parse(localStorage.getItem("members")) || [];
+      members.splice(index, 1); // remove from array
+      localStorage.setItem("members", JSON.stringify(members));
+      element.remove(); // remove from UI
+      location.reload(); // reload so indexes update
     }
   </script>
 </body>
