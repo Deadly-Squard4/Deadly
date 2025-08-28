@@ -2,77 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Squad Members</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { margin: 5px; padding: 8px; }
-    button { padding: 8px 12px; margin: 5px; cursor: pointer; }
-    .member { margin: 8px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px; padding: 8px; }
+    .member { margin: 8px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    .delete-btn { color: red; cursor: pointer; margin-left: 10px; }
   </style>
 </head>
 <body>
   <h2>👥 Squad Members</h2>
 
-  <input type="text" id="name" placeholder="Name">
-  <input type="text" id="role" placeholder="Role">
-  <input type="text" id="emoji" placeholder="Emoji">
-  <button onclick="addMember()">➕ Add Member</button>
+  <input id="name" placeholder="Name">
+  <input id="role" placeholder="Role">
+  <input id="emoji" placeholder="Emoji">
+  <button onclick="addMember()">Add Member</button>
 
-  <h3>Saved Members</h3>
   <div id="members"></div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyCtrpF9kCf3A43egUWDhd1mJy4lKl6oZCEKv5D1YZF6owzg7dgWotFo3aWL9XH6bzjcA/exec";
 
-    // Add new member
-    function addMember() {
-      const name = document.getElementById("name").value.trim();
-      const role = document.getElementById("role").value.trim();
-      const emoji = document.getElementById("emoji").value.trim();
-
-      if (!name || !role || !emoji) {
-        alert("Please fill all fields!");
-        return;
-      }
-
-      fetch(API_URL, {
-        method: "POST",
-        body: new URLSearchParams({ name, role, emoji })
-      })
-      .then(res => res.text())
-      .then(() => {
-        loadMembers();
-        document.getElementById("name").value = "";
-        document.getElementById("role").value = "";
-        document.getElementById("emoji").value = "";
+    async function fetchMembers() {
+      const res = await fetch(API_URL + "?action=get");
+      const data = await res.json();
+      const membersDiv = document.getElementById("members");
+      membersDiv.innerHTML = "";
+      data.forEach((m, i) => {
+        membersDiv.innerHTML += `
+          <div class="member">
+            ${m[0]} - ${m[1]} ${m[2]}
+            <span class="delete-btn" onclick="deleteMember(${i+1})">❌</span>
+          </div>
+        `;
       });
     }
 
-    // Load members from Google Sheet
-    function loadMembers() {
-      fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById("members");
-          container.innerHTML = "";
-          data.forEach((row, index) => {
-            const div = document.createElement("div");
-            div.className = "member";
-            div.innerHTML = `${row.emoji} <b>${row.name}</b> - ${row.role} 
-              <button onclick="deleteMember(${index})">❌ Delete</button>`;
-            container.appendChild(div);
-          });
-        });
+    async function addMember() {
+      const name = document.getElementById("name").value;
+      const role = document.getElementById("role").value;
+      const emoji = document.getElementById("emoji").value;
+
+      await fetch(API_URL, {
+        method: "POST",
+        body: new URLSearchParams({ name, role, emoji })
+      });
+
+      document.getElementById("name").value = "";
+      document.getElementById("role").value = "";
+      document.getElementById("emoji").value = "";
+
+      fetchMembers(); // add hone ke baad refresh
     }
 
-    // Delete member by index
-    function deleteMember(index) {
-      fetch(API_URL + "?delete=" + index, { method: "POST" })
-        .then(() => loadMembers());
+    async function deleteMember(row) {
+      await fetch(API_URL + "?action=delete&row=" + row);
+      fetchMembers();
     }
 
-    // Load members on page load
-    loadMembers();
+    fetchMembers();
   </script>
 </body>
 </html>
