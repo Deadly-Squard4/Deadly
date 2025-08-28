@@ -20,7 +20,7 @@ Welcome to the official GitHub Pages site of **DeadlySquard4** — a tactical ga
 - Squad Stats Dashboard
 
 ## 📸 Logo Preview
-![Deadly Squad Logo](images/logo.jpeg)
+![Deadly Squad Logo](copilot_image_1756302009749.jpeg)
 
 ---
 
