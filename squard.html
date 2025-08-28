@@ -4,136 +4,75 @@
   <meta charset="UTF-8">
   <title>Squad Members</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .add-btn {
-      width: 100%;
-      background: #4CAF50;
-      color: white;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    .add-btn:hover {
-      background: #45a049;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-    }
-    li {
-      background: #e8f5e9;
-      padding: 10px;
-      margin: 6px 0;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    span {
-      font-weight: bold;
-    }
-    .delete-btn {
-      background: #e53935;
-      color: white;
-      font-size: 14px;
-    }
-    .delete-btn:hover {
-      background: #c62828;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { margin: 5px; padding: 8px; }
+    button { padding: 8px 12px; margin: 5px; cursor: pointer; }
+    .member { margin: 8px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>👥 Squad Members</h2>
-    <input type="text" id="name" placeholder="Enter Name">
-    <input type="text" id="role" placeholder="Enter Role">
-    <input type="text" id="emoji" placeholder="Enter Emoji (🙂🔥⚡)">
-    <button class="add-btn" onclick="addMember()">Add Member</button>
+  <h2>👥 Squad Members</h2>
 
-    <ul id="memberList"></ul>
-  </div>
+  <input type="text" id="name" placeholder="Name">
+  <input type="text" id="role" placeholder="Role">
+  <input type="text" id="emoji" placeholder="Emoji">
+  <button onclick="addMember()">➕ Add Member</button>
+
+  <h3>Saved Members</h3>
+  <div id="members"></div>
 
   <script>
-    // Load saved members from localStorage on page load
-    window.onload = function() {
-      let savedMembers = JSON.parse(localStorage.getItem("members")) || [];
-      savedMembers.forEach((m, index) => {
-        addMemberToList(m.name, m.role, m.emoji, false, index);
-      });
-    }
+    const API_URL = "https://script.google.com/macros/s/AKfycbyCtrpF9kCf3A43egUWDhd1mJy4lKl6oZCEKv5D1YZF6owzg7dgWotFo3aWL9XH6bzjcA/exec";
 
+    // Add new member
     function addMember() {
-      let name = document.getElementById("name").value;
-      let role = document.getElementById("role").value;
-      let emoji = document.getElementById("emoji").value;
+      const name = document.getElementById("name").value.trim();
+      const role = document.getElementById("role").value.trim();
+      const emoji = document.getElementById("emoji").value.trim();
 
-      if(name && role && emoji) {
-        let members = JSON.parse(localStorage.getItem("members")) || [];
-        members.push({name, role, emoji});
-        localStorage.setItem("members", JSON.stringify(members));
+      if (!name || !role || !emoji) {
+        alert("Please fill all fields!");
+        return;
+      }
 
-        addMemberToList(name, role, emoji, false, members.length - 1);
-
-        // clear input fields
+      fetch(API_URL, {
+        method: "POST",
+        body: new URLSearchParams({ name, role, emoji })
+      })
+      .then(res => res.text())
+      .then(() => {
+        loadMembers();
         document.getElementById("name").value = "";
         document.getElementById("role").value = "";
         document.getElementById("emoji").value = "";
-      } else {
-        alert("Please fill all fields!");
-      }
+      });
     }
 
-    function addMemberToList(name, role, emoji, save, index) {
-      let li = document.createElement("li");
-      li.innerHTML = `${emoji} <span>${name}</span> - ${role}`;
-      
-      // delete button
-      let delBtn = document.createElement("button");
-      delBtn.innerText = "Delete";
-      delBtn.className = "delete-btn";
-      delBtn.onclick = function() {
-        deleteMember(index, li);
-      };
-
-      li.appendChild(delBtn);
-      document.getElementById("memberList").appendChild(li);
+    // Load members from Google Sheet
+    function loadMembers() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("members");
+          container.innerHTML = "";
+          data.forEach((row, index) => {
+            const div = document.createElement("div");
+            div.className = "member";
+            div.innerHTML = `${row.emoji} <b>${row.name}</b> - ${row.role} 
+              <button onclick="deleteMember(${index})">❌ Delete</button>`;
+            container.appendChild(div);
+          });
+        });
     }
 
-    function deleteMember(index, element) {
-      let members = JSON.parse(localStorage.getItem("members")) || [];
-      members.splice(index, 1); // remove from array
-      localStorage.setItem("members", JSON.stringify(members));
-      element.remove(); // remove from UI
-      location.reload(); // reload so indexes update
+    // Delete member by index
+    function deleteMember(index) {
+      fetch(API_URL + "?delete=" + index, { method: "POST" })
+        .then(() => loadMembers());
     }
+
+    // Load members on page load
+    loadMembers();
   </script>
 </body>
 </html>
