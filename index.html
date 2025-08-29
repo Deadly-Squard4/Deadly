@@ -1,20 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deadly Squard</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Basic styling (you can move this into style.css) */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      text-align: center;
+    }
+    header {
+      background: #161b22;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #ffcc00;
+    }
+    header p {
+      font-style: italic;
+      margin: 0.3rem 0 0;
+      color: #9da5b4;
+    }
+    nav {
+      margin-top: 1rem;
+    }
+    nav a {
+      color: #58a6ff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #ffcc00;
+    }
+    .logo img {
+      margin-top: 2rem;
+      width: 180px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    }
+    footer {
+      margin-top: 3rem;
+      padding: 1rem;
+      background: #161b22;
+      font-size: 0.9rem;
+      color: #9da5b4;
+    }
+  </style>
 </head>
 <body>
-  <h1>🦁 Deadly Squard 🦁</h1>
-  <p>"The Deadly's Never Rest, They Conquer."</p>
-  <div class="logo">
-  <img src="deadly.png" alt="Deadly Squard Logo" style="width:150px;">
-  </div>
-  <a href="squard.html">Squard Members</a>
-  <br>
-  <a href="about.html">About</a>
-  <br>
-  <a href="game_Alert.html">Game Alert</a>
+
+  <header>
+    <h1>⚔️ Deadly Squard 🛡️</h1>
+    <p>"The Deadly's Never Rest, They Conquer."</p>
+    <nav>
+      <a href="squard.html">Members</a>
+      <a href="about.html">About</a>
+      <a href="game_Alert.html">Game Alert</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="logo">
+      <img src="deadly.png" alt="Deadly Squard Logo">
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Deadly Squard. All Rights Reserved.</p>
+  </footer>
 
 </body>
 </html>
