@@ -2,77 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Photo Gallery</title>
+  <title>Gallery Upload</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-    input, button { padding: 10px; margin: 5px; font-size: 1rem; }
-    #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
-    #gallery img { width: 200px; height: 150px; object-fit: cover; border: 1px solid #ccc; border-radius: 5px; }
-    .msg { margin-top: 10px; color: green; }
-    .error { margin-top: 10px; color: red; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    .upload-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+    input[type="file"] {
+      margin: 10px 0;
+    }
+    button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    #gallery img {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body>
-  <h1>Photo Gallery</h1>
+  <h1>My Gallery</h1>
 
-  <form id="uploadForm">
-    <input type="file" id="fileInput" accept="image/*" required>
-    <button type="submit">Upload</button>
-  </form>
-  <div id="message"></div>
+  <div class="upload-box">
+    <h3>Upload a Picture</h3>
+    <input type="file" id="file" accept="image/*">
+    <br>
+    <button onclick="uploadFile()">Upload</button>
+  </div>
+
+  <h2>Uploaded Pictures</h2>
   <div id="gallery"></div>
 
   <script>
-    // Paste your Web App URL below:
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyB2TKZr1yC35b6wWODFp4FauJnlTTaf9zyFkWxrdct6wsuHOj-A1ZAhRy5q4U07xLI4w/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzyeT8TkQUh7RJNS5zgjq0Jio70_MshzFogo288HHIqErvhv_Ihel0ezpwJa5eQcIau/exec";
 
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const fileInput = document.getElementById('fileInput');
-      if (!fileInput.files.length) {
-        showMessage('Please choose a file.', 'error');
+    async function uploadFile() {
+      const fileInput = document.getElementById("file");
+      if (fileInput.files.length === 0) {
+        alert("Please select a file first.");
         return;
       }
 
-      const formData = new FormData();
-      formData.append('file', fileInput.files[0]);
+      const file = fileInput.files[0];
+      let formData = new FormData();
+      formData.append("file", file);
 
       try {
-        await fetch(scriptURL, { method: 'POST', body: formData });
-        showMessage('Image uploaded successfully!', 'msg');
-        fileInput.value = '';
-        loadGallery();
+        let response = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+        let result = await response.json();
+        if (result.status === "success") {
+          alert("Uploaded successfully!");
+          loadGallery();
+        } else {
+          alert("Upload failed!");
+        }
       } catch (err) {
+        alert("Error uploading file.");
         console.error(err);
-        showMessage('Upload error occurred.', 'error');
       }
-    });
+    }
 
     async function loadGallery() {
       try {
-        const res = await fetch(scriptURL + '?listFiles=true');
-        const data = await res.json();
-        const galleryDiv = document.getElementById('gallery');
-        galleryDiv.innerHTML = '';
-        data.files.reverse().forEach(file => {  // Showing newest first
-          const img = document.createElement('img');
-          img.src = file.url;
-          img.title = file.name;
-          galleryDiv.appendChild(img);
+        let response = await fetch(scriptURL);
+        let images = await response.json();
+        let gallery = document.getElementById("gallery");
+        gallery.innerHTML = "";
+        images.forEach(url => {
+          let img = document.createElement("img");
+          img.src = url;
+          gallery.appendChild(img);
         });
       } catch (err) {
-        console.error('Error loading gallery:', err);
+        console.error("Error loading gallery:", err);
       }
     }
 
-    function showMessage(txt, cls) {
-      const msgDiv = document.getElementById('message');
-      msgDiv.textContent = txt;
-      msgDiv.className = cls;
-      setTimeout(() => { msgDiv.textContent = ''; msgDiv.className = ''; }, 3000);
-    }
-
-    loadGallery();
+    // Load gallery on page load
+    window.onload = loadGallery;
   </script>
 </body>
 </html>
