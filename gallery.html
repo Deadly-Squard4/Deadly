@@ -1,55 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Deadly Squad Gallery</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Gallery</title>
   <style>
-    body {
-      background-color: #0f0f0f;
-      color: #ffd700;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-    }
-    .gallery-item {
-      width: 240px;
-    }
-    .gallery img {
-      width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ffd700;
-      transition: transform 0.3s ease;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
-    .caption {
-      margin-top: 5px;
-      font-size: 15px;
-      color: #f0f0f0;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; }
+    h1 { color: #333; }
+    #gallery { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    #gallery img { width: 200px; height: 150px; object-fit: cover; border-radius: 8px; box-shadow: 0 0 5px #888; }
   </style>
 </head>
 <body>
+  <h1>📷 My Photo Gallery</h1>
+  <form id="uploadForm">
+    <input type="file" id="fileInput" name="file" accept="image/*" required>
+    <button type="submit">Upload</button>
+  </form>
 
-  <h1>📸 Deadly Squad Gallery</h1>
-  <p>Squad ke golden moments — Chicken Dinner se lekar voice chat ke memes tak!</p>
+  <h2>Uploaded Images</h2>
+  <div id="gallery"></div>
 
-  <div class="gallery">
-    <div class="gallery-item">
-      <img src="https://drive.google.com/uc?export=view&id=1y8jAQu-Pn8ZG6OxyxcYmUotARnnEsivr" alt="Squad Moment">
-      <div class="caption">🔥 Deadly Squad — Happy Moment</div>
-    </div>
-  </div>
+  <script>
+    const scriptURL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE"; 
 
+    // Upload image
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      let file = document.getElementById("fileInput").files[0];
+      if (!file) return;
+
+      let formData = new FormData();
+      formData.append("file", file);
+
+      await fetch(scriptURL, { method: "POST", body: formData });
+      alert("✅ Upload Successful!");
+      loadGallery();
+    });
+
+    // Load gallery images
+    async function loadGallery() {
+      let res = await fetch(scriptURL + "?listFiles=true");
+      let data = await res.json();
+
+      let gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
+      data.files.forEach(file => {
+        let img = document.createElement("img");
+        img.src = file.url;
+        gallery.appendChild(img);
+      });
+    }
+
+    loadGallery();
+  </script>
 </body>
 </html>
