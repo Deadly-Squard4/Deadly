@@ -5,9 +5,11 @@
   <title>My Photo Gallery</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-    input, button { padding: 10px; margin: 5px; }
+    input, button { padding: 10px; margin: 5px; font-size: 1rem; }
     #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
     #gallery img { width: 200px; height: 150px; object-fit: cover; border: 1px solid #ccc; border-radius: 5px; }
+    .msg { margin-top: 10px; color: green; }
+    .error { margin-top: 10px; color: red; }
   </style>
 </head>
 <body>
@@ -17,27 +19,32 @@
     <input type="file" id="fileInput" accept="image/*" required>
     <button type="submit">Upload</button>
   </form>
-
+  <div id="message"></div>
   <div id="gallery"></div>
 
   <script>
-    const scriptURL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE"; // ← Yahan Web App URL paste karna
+    // Paste your Web App URL below:
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyB2TKZr1yC35b6wWODFp4FauJnlTTaf9zyFkWxrdct6wsuHOj-A1ZAhRy5q4U07xLI4w/exec";
 
-    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const fileInput = document.getElementById('fileInput');
-      if (!fileInput.files.length) return alert('Please choose a file.');
+      if (!fileInput.files.length) {
+        showMessage('Please choose a file.', 'error');
+        return;
+      }
 
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
 
       try {
         await fetch(scriptURL, { method: 'POST', body: formData });
-        alert('Image uploaded successfully!');
+        showMessage('Image uploaded successfully!', 'msg');
+        fileInput.value = '';
         loadGallery();
       } catch (err) {
         console.error(err);
-        alert('Upload error.');
+        showMessage('Upload error occurred.', 'error');
       }
     });
 
@@ -47,9 +54,10 @@
         const data = await res.json();
         const galleryDiv = document.getElementById('gallery');
         galleryDiv.innerHTML = '';
-        data.files.forEach(file => {
+        data.files.reverse().forEach(file => {  // Showing newest first
           const img = document.createElement('img');
           img.src = file.url;
+          img.title = file.name;
           galleryDiv.appendChild(img);
         });
       } catch (err) {
@@ -57,7 +65,13 @@
       }
     }
 
-    // Initial load
+    function showMessage(txt, cls) {
+      const msgDiv = document.getElementById('message');
+      msgDiv.textContent = txt;
+      msgDiv.className = cls;
+      setTimeout(() => { msgDiv.textContent = ''; msgDiv.className = ''; }, 3000);
+    }
+
     loadGallery();
   </script>
 </body>
