@@ -111,7 +111,10 @@
         console.error("Error loading gallery:", err);
       }
     }
-
+<form id="uploadForm" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" id="file" required>
+    <button type="submit">Upload</button>
+</form>
     // Load gallery on page load
     window.onload = loadGallery;
   </script>
