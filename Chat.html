@@ -1,0 +1,22 @@
+function createPage() {
+  const number = document.getElementById("numberInput").value;
+  if (number.length >= 10 && /^\d+$/.test(number)) {
+    const pageContent = `
+      <!DOCTYPE html>
+      <html>
+      <head><title>Chat with ${number}</title></head>
+      <body>
+        <h2>🧑 Chat with ${number}</h2>
+        <p>This is a private chat page for Deadly Squad member ${number}.</p>
+      </body>
+      </html>
+    `;
+    const blob = new Blob([pageContent], { type: "text/html" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `pages/${number}.html`;
+    link.click();
+  } else {
+    alert("Invalid number!");
+  }
+}
