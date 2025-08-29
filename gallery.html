@@ -2,56 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photo Gallery</title>
+  <title>My Photo Gallery</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; }
-    h1 { color: #333; }
-    #gallery { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    #gallery img { width: 200px; height: 150px; object-fit: cover; border-radius: 8px; box-shadow: 0 0 5px #888; }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    input, button { padding: 10px; margin: 5px; }
+    #gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+    #gallery img { width: 200px; height: 150px; object-fit: cover; border: 1px solid #ccc; border-radius: 5px; }
   </style>
 </head>
 <body>
-  <h1>📷 My Photo Gallery</h1>
+  <h1>Photo Gallery</h1>
+
   <form id="uploadForm">
-    <input type="file" id="fileInput" name="file" accept="image/*" required>
+    <input type="file" id="fileInput" accept="image/*" required>
     <button type="submit">Upload</button>
   </form>
 
-  <h2>Uploaded Images</h2>
   <div id="gallery"></div>
 
   <script>
-    const scriptURL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE"; 
+    const scriptURL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE"; // ← Yahan Web App URL paste karna
 
-    // Upload image
-    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+    document.getElementById('uploadForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      let file = document.getElementById("fileInput").files[0];
-      if (!file) return;
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files.length) return alert('Please choose a file.');
 
-      let formData = new FormData();
-      formData.append("file", file);
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
 
-      await fetch(scriptURL, { method: "POST", body: formData });
-      alert("✅ Upload Successful!");
-      loadGallery();
+      try {
+        await fetch(scriptURL, { method: 'POST', body: formData });
+        alert('Image uploaded successfully!');
+        loadGallery();
+      } catch (err) {
+        console.error(err);
+        alert('Upload error.');
+      }
     });
 
-    // Load gallery images
     async function loadGallery() {
-      let res = await fetch(scriptURL + "?listFiles=true");
-      let data = await res.json();
-
-      let gallery = document.getElementById("gallery");
-      gallery.innerHTML = "";
-      data.files.forEach(file => {
-        let img = document.createElement("img");
-        img.src = file.url;
-        gallery.appendChild(img);
-      });
+      try {
+        const res = await fetch(scriptURL + '?listFiles=true');
+        const data = await res.json();
+        const galleryDiv = document.getElementById('gallery');
+        galleryDiv.innerHTML = '';
+        data.files.forEach(file => {
+          const img = document.createElement('img');
+          img.src = file.url;
+          galleryDiv.appendChild(img);
+        });
+      } catch (err) {
+        console.error('Error loading gallery:', err);
+      }
     }
 
+    // Initial load
     loadGallery();
   </script>
 </body>
