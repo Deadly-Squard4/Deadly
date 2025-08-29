@@ -1,22 +1,38 @@
-function createPage() {
-  const number = document.getElementById("numberInput").value;
-  if (number.length >= 10 && /^\d+$/.test(number)) {
-    const pageContent = `
-      <!DOCTYPE html>
-      <html>
-      <head><title>Chat with ${number}</title></head>
-      <body>
-        <h2>🧑 Chat with ${number}</h2>
-        <p>This is a private chat page for Deadly Squad member ${number}.</p>
-      </body>
-      </html>
-    `;
-    const blob = new Blob([pageContent], { type: "text/html" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `pages/${number}.html`;
-    link.click();
-  } else {
-    alert("Invalid number!");
-  }
-}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Deadly Squad Chat Room</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #eee; padding: 20px; }
+    #chat { background: #222; padding: 15px; border-radius: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
+    .msg { margin: 5px 0; padding: 5px; background: #333; border-radius: 5px; }
+    input, button { padding: 10px; font-size: 16px; border-radius: 5px; border: none; }
+    input { width: 70%; }
+    button { background: #00ff88; color: #000; }
+  </style>
+</head>
+<body>
+  <h2>💀 Deadly Squad Anonymous Chat</h2>
+  <div id="chat"></div>
+  <input type="text" id="message" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const chatBox = document.getElementById("chat");
+
+    function sendMessage() {
+      const msgInput = document.getElementById("message");
+      const msg = msgInput.value.trim();
+      if (msg) {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = "msg";
+        msgDiv.textContent = "👤 " + msg;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        msgInput.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
