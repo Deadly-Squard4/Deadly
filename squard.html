@@ -3,65 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Squad Members</title>
+  <title>Deadly Squard | Members</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { margin: 5px; padding: 8px; }
-    .member { margin: 8px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-    .delete-btn { color: red; cursor: pointer; margin-left: 10px; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+    }
+    header {
+      background: #161b22;
+      padding: 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #ffcc00;
+    }
+    nav {
+      margin-top: 0.5rem;
+    }
+    nav a {
+      color: #58a6ff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: #ffcc00;
+    }
+    section {
+      padding: 2rem;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #ffcc00;
+    }
+    .members {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: #161b22;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 2px solid #ffcc00;
+    }
+    .card h2 {
+      margin: 0.5rem 0;
+      color: #ffcc00;
+    }
+    .card p {
+      color: #9da5b4;
+      font-size: 0.9rem;
+    }
+    .founders .card {
+      border: 2px solid #ffcc00;
+      background: #1e2633;
+    }
   </style>
 </head>
 <body>
-  <h2>👥 Squad Members</h2>
 
-  <input id="name" placeholder="Name">
-  <input id="role" placeholder="Role">
-  <input id="emoji" placeholder="Emoji">
-  <button onclick="addMember()">Add Member</button>
+  <header>
+    <h1>⚔️ Deadly Squard Members 🛡️</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="game_Alert.html">Game Alert</a>
+    </nav>
+  </header>
 
-  <div id="members"></div>
+  <!-- Founder Section -->
+  <section class="founders">
+    <h2 class="section-title">🏆 Founders Stage</h2>
+    <div class="members">
+      <div class="card">
+        <img src="bunny.png" alt="Bunny Leader">
+        <h2>🐰 Bunny</h2>
+        <p>🔥 Main Leader & Visionary</p>
+      </div>
+      <div class="card">
+        <img src="turtle.png" alt="Turtle Co-Leader">
+        <h2>🐢 Turtle</h2>
+        <p>⚔️ Co-Leader & In-Game Leader</p>
+      </div>
+      <div class="card">
+        <img src="panda.png" alt="Panda Scout">
+        <h2>🐼 Panda</h2>
+        <p>🕵️ Scout & Strategy Support</p>
+      </div>
+    </div>
+  </section>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyCtrpF9kCf3A43egUWDhd1mJy4lKl6oZCEKv5D1YZF6owzg7dgWotFo3aWL9XH6bzjcA/exec";
+  <!-- Other Members Section -->
+  <section>
+    <h2 class="section-title">🎮 Team Members</h2>
+    <div class="members">
+      <div class="card">
+        <img src="member1.png" alt="Member 1">
+        <h2>Player One</h2>
+        <p>Sniper | Long-Range Specialist</p>
+      </div>
+      <div class="card">
+        <img src="member2.png" alt="Member 2">
+        <h2>Player Two</h2>
+        <p>Warrior | Frontline Fighter</p>
+      </div>
+      <div class="card">
+        <img src="member3.png" alt="Member 3">
+        <h2>Player Three</h2>
+        <p>Support | Healing & Backup</p>
+      </div>
+    </div>
+  </section>
 
-    async function fetchMembers() {
-      const res = await fetch(API_URL + "?action=get");
-      const data = await res.json();
-      const membersDiv = document.getElementById("members");
-      membersDiv.innerHTML = "";
-      data.forEach((m, i) => {
-        membersDiv.innerHTML += `
-          <div class="member">
-            ${m[0]} - ${m[1]} ${m[2]}
-            <span class="delete-btn" onclick="deleteMember(${i+1})">❌</span>
-          </div>
-        `;
-      });
-    }
-
-    async function addMember() {
-      const name = document.getElementById("name").value;
-      const role = document.getElementById("role").value;
-      const emoji = document.getElementById("emoji").value;
-
-      await fetch(API_URL, {
-        method: "POST",
-        body: new URLSearchParams({ name, role, emoji })
-      });
-
-      document.getElementById("name").value = "";
-      document.getElementById("role").value = "";
-      document.getElementById("emoji").value = "";
-
-      fetchMembers(); // add hone ke baad refresh
-    }
-
-    async function deleteMember(row) {
-      await fetch(API_URL + "?action=delete&row=" + row);
-      fetchMembers();
-    }
-
-    fetchMembers();
-  </script>
 </body>
 </html>
